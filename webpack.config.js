@@ -15,5 +15,10 @@ module.exports = {
                 // include: 'node_modules/jquery'
             }
         ]
-    }
+    },
+    plugins: [
+        new webpack.ProvidePlugin({
+            $: 'jquery',
+        })
+    ]
 };
