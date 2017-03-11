@@ -16,12 +16,12 @@ class Dataprovider {
     }
 
     init() {
-        const socket = this.socket = new WebSocket(this._source);
+        const socket = this.socket = io.connect(this._source, {reconnect: true});
 
-        socket.onopen = this._onOpen.bind(this);
-        socket.onclose = this._onClose.bind(this);
-        socket.onmessage = this._onMessage.bind(this);
-        socket.onerror = this._onError.bind(this);
+        socket.on('connect', data => this._onConnect(data));
+        socket.on('message', data => this._onMessage(data));
+        socket.on('error', data => this._onError(data));
+        socket.on('close', data => this._onClose(data));
     }
 
     send(data) {
@@ -125,29 +125,26 @@ class Dataprovider {
 
         if (!type) {
             _.remove(this._listeners.message, {id: eventID});
+
             return;
         }
 
         _.remove(this._listeners.messageTypes[type], {id: eventID});
     }
 
-    _onOpen(res) {
-        // NOTE: need provide `data` to listener ?
-        this._listeners.open.forEach(item => item.listener.call(item.ctx));
+    _onConnect(data) {
+        this._listeners.open.forEach(item => item.listener.call(item.ctx, data));
     }
 
-    _onError(res) {
-        // NOTE: need provide `data` to listener ?
-        this._listeners.erorr.forEach(item => item.listener.call(item.ctx));
+    _onError(data) {
+        this._listeners.error.forEach(item => item.listener.call(item.ctx, data));
     }
 
-    _onClose(res) {
-        // NOTE: need provide `data` to listener ?
-        this._listeners.close.forEach(item => item.listener.call(item.ctx));
+    _onClose(data) {
+        this._listeners.close.forEach(item => item.listener.call(item.ctx, data));
     }
 
-    _onMessage(res) {
-        const data = JSON.parse(res.data);
+    _onMessage(data) {
         const messageTypes = this._listeners.messageTypes;
         const typeListeners = messageTypes[data.$type];
 
@@ -159,4 +156,4 @@ class Dataprovider {
     }
 }
 
-export default new Dataprovider('wss://js-assignment.evolutiongaming.com/ws_api');
+export default new Dataprovider('http://localhost:3000');

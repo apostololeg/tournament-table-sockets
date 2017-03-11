@@ -1,3 +1,5 @@
+'use strict';
+
 import Dataprovider from './Dataprovider';
 import Dashboard from './Dashboard';
 import AdminBoard from './AdminBoard';
@@ -15,12 +17,11 @@ export default class App {
     _bind() {
         Dataprovider.on({
             open: this._onConnectionOpen,
-            message: this._onMessage,
+            close: this._onConnectionClose,
             'message:pong': this._onPong,
             'message:login_successful': this._onLoginSuccessful,
             'message:login_failed': this._onLoginFailed,
-            'message:not_authorized': this._onNotAuthorized,
-            error: this._onError
+            'message:not_authorized': this._onNotAuthorized
         }, this);
     }
 
@@ -52,7 +53,7 @@ export default class App {
         console.log('connected');
 
         // ping
-        setInterval(() => this._ping(), 1000);
+        this._pingInterval = setInterval(() => this._ping(), 1000);
 
         // auth
         // TODO: must depend from ping status (?)
@@ -63,8 +64,8 @@ export default class App {
         });
     }
 
-    _onMessage() {
-
+    _onConnectionClose() {
+        clearInterval(this._pingInterval);
     }
 
     _onPong() {
@@ -91,10 +92,5 @@ export default class App {
 
     _onNotAuthorized() {
         console.log('Not Authorized!');
-    }
-
-    _onError() {
-        console.log('onerror');
-        console.log(res);
     }
 }

@@ -60,6 +60,17 @@ button {
 }
 
 /* responsive remove,update */
+.table.processing:after {
+    box-shadow: 0 0 0px 1px #ffd55d;
+    content: '';
+    position: absolute;
+    left: -5px;
+    right: -5px;
+    top: -5px;
+    bottom: -5px;
+    border-radius: 5px;
+}
+
 .table__inner.updating {
     opacity: .5;
 }
@@ -71,19 +82,6 @@ button {
     position: absolute;
     right: -1.7em;
     top: 50%;
-}
-
-.table__progress {
-    display: none;
-    height: 5px;
-    width: 100%;
-    position: absolute;
-    bottom: -10px;
-    background-color: #ffd55d;
-    border-radius: 3px;
-}
-.table.processing .table__progress {
-    display: block;
 }
 
 .table__title,

@@ -1,3 +1,5 @@
+'use strict';
+
 import EventBus from 'eventbusjs';
 
 export default class AdminBoard {

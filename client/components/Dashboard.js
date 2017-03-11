@@ -1,3 +1,5 @@
+'use strict';
+
 import sha1 from 'sha1';
 import EventBus from 'eventbusjs';
 import Dataprovider from './Dataprovider';
@@ -35,7 +37,7 @@ export default class Dashboard {
     }
 
     _isTableProcessing(table) {
-        return table.find('.processing').length > 0;
+        return table.hasClass('.processing');
     }
 
     _onAddTable(e) {
@@ -84,11 +86,12 @@ export default class Dashboard {
 
     _onTableUpdated(data) {
         this._getTableById(data.id)
+            .removeClass('processing')
             .find('.table__inner.updating')
             .remove();
     }
 
-    _onTableUpdateFailed() {
+    _onTableUpdateFailed(data) {
         const table = this._getTableById(data.id);
 
         table
@@ -96,7 +99,8 @@ export default class Dashboard {
             .remove();
 
         table
-            .removeClass('updating')
+            .removeClass('processing')
+            .find('.table__inner').removeClass('updating');
     }
 
     _onRemoveTable(e) {
@@ -180,7 +184,6 @@ export default class Dashboard {
         return `
             <div class="table" data-id="${table.id}">
                 ${this._getTableInnerHTML(table)}
-                <div class="table__progress"></div>
             </div>
         `;
     }

@@ -11,8 +11,8 @@ module.exports = {
             {
                 test: /\.js$/,
                 loader: 'babel-loader',
-                exclude: 'node_modules'
-                // include: 'node_modules/jquery'
+                exclude: 'node_modules',
+                include: 'node_modules/jquery'
             }
         ]
     },
